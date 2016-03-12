@@ -1,5 +1,6 @@
 var express    = require("express"),
     middleware = require("../middleware"),
+    Comment    = require("../models/comment"),
     Campground = require("../models/campground");
     
 var router = express.Router();
@@ -69,6 +70,21 @@ router.put("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, funct
 
 //--- DESTROY ---
 router.delete("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, function(req, res){
+    Campground.findById(req.params.id, function(err, campground) {
+        if(err){
+            req.flash("error", "Couldn't find Campground!");
+            res.redirect("back");
+        }else {
+            campground.comments.forEach(function(comment_id){
+                Comment.findByIdAndRemove(comment_id, function (err){
+                    if (err){
+                        console.log(err);
+                    }
+                });
+            });
+        }
+    });
+    
     Campground.findByIdAndRemove(req.params.id, function(err){
         if(err){
             req.flash("error", "Couldn't find Campground!");

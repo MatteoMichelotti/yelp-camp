@@ -1,10 +1,10 @@
-var express               = require("express"),
-    passport              = require("passport"),
-    mongoose              = require("mongoose"),
-    bodyParser            = require("body-parser"),
-    flash                 = require("connect-flash"),
-    localStrategy         = require("passport-local"),
-    methodOverride        = require("method-override");
+var express         = require("express"),
+    passport        = require("passport"),
+    mongoose        = require("mongoose"),
+    bodyParser      = require("body-parser"),
+    flash           = require("connect-flash"),
+    localStrategy   = require("passport-local"),
+    methodOverride  = require("method-override");
     
 var User = require("./models/user");
     

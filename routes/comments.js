@@ -72,8 +72,18 @@ router.delete("/:comment_id", middleware.isLoggedIn, middleware.isAuthorOfCommen
             req.flash("error", "Couldn't find comment!");
             res.redirect("/campgrouds/"+ req.params.id);
         } else {
-            req.flash("success", "Succesfully removed comment!");
-            res.redirect("/campgrounds/"+ req.params.id);
+            Campground.findByIdAndUpdate(req.params.id, {
+                $pull: {
+                    comments: req.params.comment_id
+                }
+            }, function (err, campground){
+                if (err) {
+                    console.log(err);
+                } else {
+                    req.flash("success", "Succesfully removed comment!");
+                    res.redirect("/campgrounds/"+ req.params.id);
+                }
+            });
         }
     });
 });
