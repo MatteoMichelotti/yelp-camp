@@ -70,14 +70,14 @@ router.put("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, funct
 
 //--- DESTROY ---
 router.delete("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, function(req, res){
-    Campground.findById(req.params.id, function(err, campground) {
+    Campground.findById(req.params.id, function(err, foundCampground) {
         if(err){
             req.flash("error", "Couldn't find Campground!");
             res.redirect("back");
         }else {
             //Remove related comments
             Comment.remove({
-                _id: { $in: campground.comments },
+                _id: { $in: foundCampground.comments },
                 function(err, result){
                     if (err){
                         console.log(err);
@@ -85,7 +85,7 @@ router.delete("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, fu
                 }
             });
             //Remove campground
-            Campground.remove(function(err){
+            foundCampground.remove(function(err){
                 if(err){
                     req.flash("error", "Couldn't find Campground!");
                     res.redirect("back");
