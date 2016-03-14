@@ -75,23 +75,25 @@ router.delete("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, fu
             req.flash("error", "Couldn't find Campground!");
             res.redirect("back");
         }else {
-            campground.comments.forEach(function(comment_id){
-                Comment.findByIdAndRemove(comment_id, function (err){
+            //Remove related comments
+            Comment.remove({
+                _id: { $in: campground.comments },
+                function(err, result){
                     if (err){
                         console.log(err);
                     }
-                });
+                }
             });
-        }
-    });
-    
-    Campground.findByIdAndRemove(req.params.id, function(err){
-        if(err){
-            req.flash("error", "Couldn't find Campground!");
-            res.redirect("back");
-        }else {
-            req.flash("success", "Succesfully removed campground");
-            res.redirect("/campgrounds");
+            //Remove campground
+            Campground.remove(function(err){
+                if(err){
+                    req.flash("error", "Couldn't find Campground!");
+                    res.redirect("back");
+                }else {
+                    req.flash("success", "Succesfully removed campground");
+                    res.redirect("/campgrounds");
+                }
+            });
         }
     });
 });
