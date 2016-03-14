@@ -98,5 +98,4 @@ router.delete("/:id", middleware.isLoggedIn, middleware.isAuthorOfCampground, fu
     });
 });
 
-
 module.exports = router;
